@@ -1,6 +1,6 @@
 # Lattice
 
-* Totally not in any usable state yet, go look somewhere else. *
+*Totally not in any usable state yet, go look somewhere else.*
 
 ## Mission statement
 
