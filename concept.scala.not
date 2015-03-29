@@ -1,0 +1,102 @@
+type Dim = (Int,Int)
+type Pos = (Int,Int)
+
+trait Lattice[T] {
+  val data: Vector[T]
+  val dims: Dim
+}
+
+trait InfiniteLattice[T] extends Lattice {
+  val origin: Pos 
+}
+
+object LatticeOps {
+  def append(a: T, b: Lattice[T]): Lattice[T]
+  def append(a: Lattice[T], b: Lattice[T]): Lattice[T]
+  def appendVertical(a: Lattice[T], b: Lattice[T]): Lattice[T]
+
+  def `#` = append
+  def `@` = appendVertical
+
+}
+
+object Lattice {
+  // constructors
+}
+
+// constructing
+
+Lattice.fill /v:/ analogous to stdlib fill
+
+List(a,b,c).toLattice
+
+val row = Row(a,b,c)
+val col = Col(a,b,c)
+
+
+Lattice(R)
+
+// appending vectors and matrices
+a # b
+
+// appending rows and cols pads if there is an implicit default element
+row # col // appends top of col to end of row -> 4x3 lattice
+col # row
+
+x   # row @
+col // x in upperleft corner, with row going left and col downwards, rest is padded
+
+
+// vertical appending
+
+a @
+b @
+c
+
+(a # b # c) @
+(d # e # f) @
+g // automatic padding is default
+// maybe have an operator that errors instead of pad
+
+// view
+// since lattices are immutable, we can reuse existing ones for views.
+a(23,23) // element at (23,23)
+a((23,23)) // same with tuple
+a((3,3),(9,9)) // view window on a from (3,3) to (9,9)
+
+a.get // same with options
+
+
+// update
+val b = a((23,23),77) // updated a at (23,23)
+val b = a((3,3),(9,9),c) // updated window in a with c
+val b = a((3,3),c) // updated a at pos (3,3) with lattice c, copying over values of a, growing it if necessary
+
+def apply(p:Pos,v:T)
+def apply(window:(Pos,Pos), vs:Lattice[T])
+def apply(p:Pos, vs: Lattice[T])
+
+// structural ops
+a.transpose
+
+// higher order functions
+a.map(f) // regular old map
+a.foldLeft/Right
+a.fold
+a.foldRows(f) // fold row-wise
+a.foldCol(f)
+a.mapWindow(dims,f)
+
+// map a function onto a window for each
+def mapWindow(m: Lattice[T], dim: Dim, f: T=>U): Lattice[U]
+
+// map2 requires pads if lattices aren't same dimension
+def map2[T,U,R](a:Lattice[T], b:Lattice[U], f: (T,U)=>R ): Lattice[R]
+map3, map4, ...
+
+def mul[T,U,R]
+
+
+// infinite lattices
+// center-origin lattices
+
